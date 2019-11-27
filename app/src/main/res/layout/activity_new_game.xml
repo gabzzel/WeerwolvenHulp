@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2B2B2B"
+    tools:context=".NewGameActivity">
+
+    <ScrollView
+        android:id="@+id/cards_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pick_cards_text">
+
+        <TableLayout
+            android:id="@+id/table_of_cards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TableRow
+                android:id="@+id/row_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:gravity="center|center_horizontal"
+                android:minHeight="100dp">
+
+                <Button
+                    android:id="@+id/pick_werewolf_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/werewolfcard100"
+                    android:gravity="center"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddWerewolf"
+                    android:textColor="#FF0606"
+                    android:textSize="30sp"
+                    android:textStyle="bold|italic" />
+
+                <Button
+                    android:id="@+id/pick_citizen_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:height="100dp"
+                    android:alpha="0.5"
+                    android:background="@drawable/citizencard100"
+                    android:longClickable="true"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddCitizen"
+                    android:textAllCaps="false"
+                    android:textColor="#D0FF0000"
+                    android:textSize="30sp"
+                    android:textStyle="bold|italic" />
+
+                <Button
+                    android:id="@+id/pick_seer_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/seercard100"
+                    android:maxWidth="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddSingleCard"
+                    android:textColor="#D0FFFFFF" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/pick_cupid_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/cupidcard100"
+                    android:maxWidth="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddSingleCard"
+                    android:textColor="#D0FFFFFF" />
+
+                <Button
+                    android:id="@+id/pick_hunter_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/huntercard100"
+                    android:maxWidth="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddSingleCard"
+                    android:textColor="#D0FFFFFF" />
+
+                <Button
+                    android:id="@+id/pick_witch_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/witchcard100"
+                    android:maxWidth="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddSingleCard"
+                    android:textColor="#D0FFFFFF" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/pick_thief_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/thiefcard100"
+                    android:maxWidth="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddSingleCard"
+                    android:textColor="#D0FFFFFF" />
+
+                <Button
+                    android:id="@+id/pick_cheating_girl_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/cheatinggirlcard100"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:onClick="AddSingleCard"
+                    android:textColor="#D0FFFFFF" />
+
+                <Button
+                    android:id="@+id/placeholder_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="#505050"
+                    android:maxWidth="100dp"
+                    android:minWidth="100dp"
+                    android:minHeight="100dp"
+                    android:text="placeholder"
+                    android:textColor="#D0FFFFFF" />
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/start_game_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:onClick="StartGame"
+        android:text="@string/start_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/pick_cards_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/pick_cards"
+        android:textColor="#D0FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/selected_counter_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selected_text"
+        android:textColor="#C5C5C5"
+        app:layout_constraintBottom_toTopOf="@+id/cards_scroll_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
