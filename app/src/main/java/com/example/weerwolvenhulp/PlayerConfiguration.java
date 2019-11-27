@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -39,8 +38,11 @@ public class PlayerConfiguration extends AppCompatActivity {
         citizens = intent.getIntExtra("citizens", 1);
         singleCards = intent.getBooleanArrayExtra("singleCards");
         playerCount = werewolves + citizens;
-        for(int i = 0; i < singleCards.length; i++){
-            if(singleCards[i]) playerCount++;
+
+        if(singleCards != null && singleCards.length > 0) {
+            for (boolean card : singleCards) {
+                if (card) playerCount++;
+            }
         }
 
         UpdateCounter();
@@ -50,6 +52,15 @@ public class PlayerConfiguration extends AppCompatActivity {
         newGameIntent = new Intent(this, InGame.class);
         intent.putExtra("playerCount",playerCount);
         SetImage(queue.poll());
+
+        EditText input = findViewById(R.id.player_name_input);
+        input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                NextPlayer(findViewById(R.id.next_player_button));
+                return true;
+            }
+        });
 
     }
 
@@ -96,7 +107,17 @@ public class PlayerConfiguration extends AppCompatActivity {
         counterText.setText(s);
     }
 
+    void TransitionToInGame(){
+        startActivity(newGameIntent);
+    }
+
     public void NextPlayer(View view){
+
+        if(counter >= playerCount){
+            TransitionToInGame();
+            return;
+        }
+
         UpdateCounter();
         EditText nameInput = findViewById(R.id.player_name_input);
         String name = nameInput.getText().toString(); // Get the filled in name
@@ -110,7 +131,7 @@ public class PlayerConfiguration extends AppCompatActivity {
             SetImage(queue.poll());
         }
         else{
-            ((Button)view).setText("Done");
+            ((Button)view).setText("Done. Start Game!");
         }
     }
 
