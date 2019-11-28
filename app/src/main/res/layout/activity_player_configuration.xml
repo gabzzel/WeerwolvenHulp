@@ -11,7 +11,7 @@
         android:id="@+id/player_config_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:text="@string/player_config_header"
         android:textColor="#D0FFFFFF"
         android:textSize="30sp"
@@ -34,49 +34,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/player_config_header" />
 
-    <EditText
-        android:id="@+id/player_name_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginBottom="128dp"
-        android:ems="10"
-        android:hint="@string/player_name_placeholder"
-        android:imeOptions="actionNext"
-        android:inputType="textPersonName"
-        android:singleLine="true"
-        android:textColor="#D0FFFFFF"
-        android:textColorHint="#7C7C7C"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/next_player_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:onClick="NextPlayer"
         android:text="@string/player_config_next_player"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_name_input" />
-
-    <ImageView
-        android:id="@+id/player_config_role_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/werewolf_name"
-        app:layout_constraintBottom_toTopOf="@+id/player_name_input"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_config_counter_text"
-        tools:srcCompat="@drawable/werewolfcard200" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/player_config_counter_text"
@@ -89,5 +56,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/player_config_description" />
+
+    <TextView
+        android:id="@+id/player_config_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Naam"
+        android:textColor="#D0FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/player_config_counter_text" />
+
+    <ImageView
+        android:id="@+id/player_config_role_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:minHeight="200dp"
+        app:layout_constraintBottom_toTopOf="@+id/next_player_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/player_config_name"
+        tools:srcCompat="@drawable/werewolfcard200" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,12 @@ public class Player implements Serializable {
 
     public Faction faction = Faction.Citizens;
 
+    public Player(String _name){
+        name = _name;
+        isMayor = false;
+        faction = Faction.Citizens;
+    }
+
     public Player(Card.Role role, String _name){
 
         switch (role){

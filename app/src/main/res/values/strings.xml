@@ -17,13 +17,15 @@
     <string name="new_day_started">Dag $ gestart.</string>
     <string name="start_new_day">Start volgende dag!</string>
     <string name="start_new_night">Start volgende nacht!</string>
-    <string name="selected_text">%1$d geselecteerd</string>
+    <string name="selected_text">%1$d van de %2$d geselecteerd</string>
     <string name="player_config_header">Speler Configuratie</string>
-    <string name="player_config_description">Hieronder komen alle geselecteerde rollen voorbij. Vul de naam in van een (van de) speler(s) die deze rol van U, de verteller, heeft gekregen.</string>
-    <string name="player_name_placeholder">Naam...</string>
+    <string name="player_config_description">Hieronder komen alle namen voorbij. Onder de naam staan de beschikbare rollen. Geef dit apparaat onder de spelers en laat ze hun rol selecteren door op de correcte kaart te drukken. Alle spelers moeten dus wel eerlijk zijn! Als de laatste speler zijn rol heeft ingevuld, wordt duidelijk of iedereen eerlijk is geweest…</string>
+    <string name="player_name_placeholder">Naam…</string>
     <string name="player_config_next_player">Volgende speler</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="player_config_counter">Aantal %1$d / %2$d</string>
+    <string name="player_setup_header">Speler Setup</string>
+    <string name="player_setup_description">Vul hieronder de namen in van de spelers die meedoen. Druk op de Enter / Return toets om de naam op te slaan. Je moet minimaal 4 spelers hebben om een spel te kunnen starten. Natuurlijk zijn \'lege\' namen niet toegestaan.</string>
+    <string name="done">Klaar!</string>
+    <string name="player_setup_counter">Totaal aantal spelers : %1$d</string>
+    <string name="card_setup_description">Selecteer hieronder de kaarten die meedoen aan deze ronde. Van sommige kaarten kunnen meerdere worden geselecteerd. Deze kaarten kunnen weer op 0 worden gezet door de kaart ingedrukt te houden. Natuurlijk moet je minstens 1 weerwolf in het spel hebben.</string>
 </resources>
