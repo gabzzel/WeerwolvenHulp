@@ -7,6 +7,8 @@ public class Player implements Serializable {
     public Card card = null;
     public boolean isMayor = false;
     public String name = "Gabriel";
+    public boolean alive = true;
+    public boolean markOfDeath = false;
 
     public enum Faction{
         Citizens,
@@ -42,4 +44,20 @@ public class Player implements Serializable {
         name = _name;
     }
 
+    public void Reset(){
+        card = null;
+        isMayor = false;
+        name = "";
+        alive = true;
+        markOfDeath = false;
+    }
+
+    public boolean Kill(){
+        if(markOfDeath){
+            alive = false;
+            return true;
+        }
+
+        return false;
+    }
 }

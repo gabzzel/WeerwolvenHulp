@@ -14,7 +14,6 @@
     <string name="cupid_name">Cupido</string>
     <string name="start_text">Start!</string>
     <string name="new_game_top_text">Nieuw spel gestart.</string>
-    <string name="new_day_started">Dag $ gestart.</string>
     <string name="start_new_day">Start volgende dag!</string>
     <string name="start_new_night">Start volgende nacht!</string>
     <string name="selected_text">%1$d van de %2$d geselecteerd</string>
@@ -28,4 +27,12 @@
     <string name="done">Klaar!</string>
     <string name="player_setup_counter">Totaal aantal spelers : %1$d</string>
     <string name="card_setup_description">Selecteer hieronder de kaarten die meedoen aan deze ronde. Van sommige kaarten kunnen meerdere worden geselecteerd. Deze kaarten kunnen weer op 0 worden gezet door de kaart ingedrukt te houden. Natuurlijk moet je minstens 1 weerwolf in het spel hebben.</string>
+    <string name="night_started_event">Nacht %1$d is begonnen.</string>
+    <string name="day_started_event">Dag %1$d is begonnen.</string>
+    <string name="elect_mayor_event_description">Roep een stemming uit voor een nieuwe burgemeester.</string>
+    <string name="handle_role_event_description">Roep de %1$s op.</string>
+    <string name="start_next_DoN_event_description">Start de volgende %1$s.</string>
+    <string name="lynch_event_description">Roep een stemming op voor de volgende lynching / brandstapel.</string>
+    <string name="announce_dead_event_description">De volgende spelers zijn dood :</string>
+    <string name="next_event">Volgende gebeurtenis.</string>
 </resources>
