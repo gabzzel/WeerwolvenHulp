@@ -51,8 +51,6 @@ public class InGame extends AppCompatActivity {
 
         Event currentEvent = events.poll();
 
-
-
         // If we have no event
         if(currentEvent == null && isDay) StartNewNight();
 
