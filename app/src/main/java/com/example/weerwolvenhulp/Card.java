@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 public class Card implements Serializable {
 
-    public boolean awakes = false;
-
     public enum Role{
         Werewolf,
         Citizen,
@@ -17,12 +15,14 @@ public class Card implements Serializable {
         CheatingGirl
     }
 
-    public Role role = Role.Citizen;
+    Role role = Role.Citizen;
 
-    public Card(){
+    Card(){
     }
 
-    public Card(Role _role){
+    Card(Role _role){
         role = _role;
     }
+
+
 }

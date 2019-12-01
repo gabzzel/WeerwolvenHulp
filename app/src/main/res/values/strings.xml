@@ -35,4 +35,8 @@
     <string name="lynch_event_description">Roep een stemming op voor de volgende lynching / brandstapel.</string>
     <string name="announce_dead_event_description">De volgende spelers zijn dood :</string>
     <string name="next_event">Volgende gebeurtenis.</string>
+    <string name="day">dag</string>
+    <string name="night">nacht</string>
+    <string name="start_first_night">Start eerste nacht.</string>
+    <string name="first_night_started">Eerste nacht gestart.</string>
 </resources>

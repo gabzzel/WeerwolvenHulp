@@ -5,7 +5,6 @@ public class Event {
     public enum EventType{
         ElectMayor,
         HandleRole,
-        StartNextDayOrNight,
         Lynch,
         AnnounceDead
     }
@@ -33,9 +32,6 @@ public class Event {
                 break;
             case HandleRole:
                 descrStringID = R.string.handle_role_event_description;
-                break;
-            case StartNextDayOrNight:
-                descrStringID = R.string.start_next_DoN_event_description;
                 break;
             case Lynch:
                 descrStringID = R.string.lynch_event_description;
