@@ -52,12 +52,17 @@ public class Player implements Serializable {
         markOfDeath = false;
     }
 
-    public boolean Kill(){
+    boolean Kill(){
         if(markOfDeath){
             alive = false;
             return true;
         }
 
         return false;
+    }
+
+    void KillImmediate(){
+        markOfDeath = true;
+        alive = false;
     }
 }

@@ -44,9 +44,9 @@ public class PlayerSetup extends AppCompatActivity {
         String name = nameInput.getText().toString();
         nameInput.setText("");
 
-        if(name.equals("") || name.length() == 0) return;
+        if(name.equals("") || name.length() == 0 || playerNames.contains(name.trim())) return;
 
-        playerNames.add(name);
+        playerNames.add(name.trim());
         playerCount++;
         UpdateCounter();
 

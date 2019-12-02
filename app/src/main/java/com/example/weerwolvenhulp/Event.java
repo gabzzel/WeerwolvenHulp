@@ -1,44 +1,27 @@
 package com.example.weerwolvenhulp;
 
+import java.util.ArrayList;
+
 public class Event {
 
     public enum EventType{
         ElectMayor,
-        HandleRole,
         Lynch,
-        AnnounceDead
+        AnnounceDead,
+        WerewolfKill,
+        WitchHeal,
+        WitchKill,
+        SeerLook,
+        HunterKill,
+        ThiefSwitch,
+        CupidAffect
     }
 
     EventType type = null;
-    Card.Role relevantRole = null;
-    int descrStringID = 0;
+
+    ArrayList<Player> affectedPlayers = new ArrayList<>();
 
     Event(EventType _type){
         type = _type;
-        SetDescription();
-    }
-
-    Event(EventType _type, Card.Role _role){
-        type = _type;
-        relevantRole = _role;
-        SetDescription();
-    }
-
-    void SetDescription(){
-        switch (type){
-
-            case ElectMayor:
-                descrStringID = R.string.elect_mayor_event_description;
-                break;
-            case HandleRole:
-                descrStringID = R.string.handle_role_event_description;
-                break;
-            case Lynch:
-                descrStringID = R.string.lynch_event_description;
-                break;
-            case AnnounceDead:
-                descrStringID = R.string.announce_dead_event_description;
-                break;
-        }
     }
 }
