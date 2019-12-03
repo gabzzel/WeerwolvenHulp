@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
 
-    public Card card = null;
-    public boolean isMayor = false;
-    public String name = "Gabriel";
-    public boolean alive = true;
-    public boolean markOfDeath = false;
+    Card card;
+    boolean isMayor = false;
+    public String name;
+    boolean alive = true;
+    boolean markOfDeath = false;
 
     public enum Faction{
         Citizens,
@@ -16,29 +16,15 @@ public class Player implements Serializable {
         Lovers
     }
 
-    public Faction faction = Faction.Citizens;
+    Faction faction = Faction.Citizens;
 
-    public Player(String _name){
-        name = _name;
-        isMayor = false;
-        faction = Faction.Citizens;
-    }
+    Player(Card.Role role, String _name){
 
-    public Player(Card.Role role, String _name){
-
-        switch (role){
-
-            // If we want to create a witch, create a new witch class. Witches need more info.
-            case Witch:
-                card = new Witch();
-                break;
-            case Werewolf:
-                card = new Card(role);
-                faction = Faction.Werewolf;
-                break;
-            default:
-                card = new Card(role);
-                break;
+        if (role == Card.Role.Werewolf) {
+            card = new Card(role);
+            faction = Faction.Werewolf;
+        } else {
+            card = new Card(role);
         }
 
         name = _name;
@@ -50,19 +36,5 @@ public class Player implements Serializable {
         name = "";
         alive = true;
         markOfDeath = false;
-    }
-
-    boolean Kill(){
-        if(markOfDeath){
-            alive = false;
-            return true;
-        }
-
-        return false;
-    }
-
-    void KillImmediate(){
-        markOfDeath = true;
-        alive = false;
     }
 }

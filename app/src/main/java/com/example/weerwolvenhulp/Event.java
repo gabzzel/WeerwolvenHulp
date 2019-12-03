@@ -5,6 +5,9 @@ import java.util.ArrayList;
 public class Event {
 
     public enum EventType{
+        EndGame_WerewolfWin,
+        EndGame_CitizenWin,
+        EndGame_LoversWin,
         ElectMayor,
         Lynch,
         AnnounceDead,

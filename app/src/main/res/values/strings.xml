@@ -32,13 +32,12 @@
     <string name="elect_mayor_event_description">Roep een stemming uit voor een nieuwe burgemeester.</string>
     <string name="start_next_DoN_event_description">Start de volgende %1$s.</string>
     <string name="lynch_event_description">Roep een stemming op voor de volgende lynching / brandstapel.</string>
-    <string name="announce_dead_event_description">De volgende spelers zijn dood : %1$s</string>
+    <string name="announce_dead_event_description">Er zijn deze nacht %1$d slachtoffers gevallen!</string>
     <string name="next_event">Volgende gebeurtenis.</string>
     <string name="day">dag</string>
     <string name="night">nacht</string>
     <string name="start_first_night">Start eerste nacht.</string>
     <string name="first_night_started">Eerste nacht gestart.</string>
-    <string name="select_players">Selecteer %1$d speler(s)</string>
     <string name="game_progress_text">Spelverloop</string>
     <string name="select_name_to">Selecteer iemand om %1$s</string>
     <string name="welcome_app_description">Deze app is bedoeld om vertellers van het spel \"Weerwolven van Wakkerdam\" te helpen tijdens een speelronde. Door onder andere de correcte volgorde van de rollen te laten zien op het relevante moment, kan de verteller zich focussen op zijn belangrijkste taak; het begeleiden van het spel. Deze app is daarmee vooral gericht op beginnende vertellers of voor vertellers die zich hebben laten overtuigen om een ingewikkeld spel te begeleiden met veel verschillende rollen en gebeurtenissen. Veel plezier!</string>
@@ -60,4 +59,14 @@
     <string name="name_select_header_seer_look">Van wie wil de ziener het kaartje zien?</string>
     <string name="name_select_header_hunter_kill">Wie neemt de jager mee in het graf?</string>
     <string name="name_select_header_cupid_affect">Wie worden de geliefden?</string>
+    <string name="end_game_werewolf_win">Spel voorbij! De weerwolven hebben gewonnnen!</string>
+    <string name="end_game_citizen_win">Spel voorbij! De burgers hebben gewonnen!</string>
+    <string name="end_game_lovers_win">Spel voorbij! De liefde heeft overwonnen!</string>
+    <string name="next_event_button_select_players_command">Selecteer spelers...</string>
+    <string name="confirm">Bevestigen</string>
+    <string name="select_single_player">Selecteer één van de onderstaande spelers en bevestig m.b.v knop onderaan.</string>
+    <string name="select_player_2_way_choice">Selecteer %1$d of %2$d van de onderstaande speler(s) en bevestig m.b.v de knop onderaan.</string>
+    <string name="select_player_fixed_number">Selecteer %1$d van de onderstaande speler(s) en bevestig m.b.v de knop onderaan.</string>
+    <string name="nobody_to_select">Er zijn geen spelers die in aanmerking komen! Je zult moeten doen alsof er iets gebeurd...</string>
+    <string name="placeholder_text">Dit is een placeholder.</string>
 </resources>
