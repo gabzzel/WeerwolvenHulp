@@ -25,6 +25,7 @@ public class PlayerConfiguration extends AppCompatActivity {
     String[] playerNames;
     ArrayList<Card.Role> roles = new ArrayList<>();
     ArrayList<Player> players = new ArrayList<>();
+    boolean containsThief = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,12 @@ public class PlayerConfiguration extends AppCompatActivity {
         roles = (ArrayList<Card.Role>) intent.getSerializableExtra("roles");
         playerNames = intent.getStringArrayExtra("playerNames");
 
+        if(roles.contains(Card.Role.Thief)){
+            roles.add(Card.Role.Citizen);
+            roles.add(Card.Role.Citizen);
+            containsThief = true;
+        }
+
         NextPlayer(null);
 
     }
@@ -46,6 +53,9 @@ public class PlayerConfiguration extends AppCompatActivity {
         // Set the counter
         TextView counterText = findViewById(R.id.player_config_counter_text);
         String s = getResources().getString(R.string.player_config_counter, players.size() + 1, playerCount);
+
+        if(containsThief) s += " (" + getResources().getString(R.string.two_extra_from_thief) +  ")";
+
         counterText.setText(s);
 
         // Set the next name
@@ -126,6 +136,7 @@ public class PlayerConfiguration extends AppCompatActivity {
         Intent intent = new Intent(this, InGame.class);
         intent.putExtras(getIntent());
         intent.putExtra("players", players);
+        if(roles.size() == 2) intent.putExtra("extraRoles", roles);
         startActivity(intent);
     }
 

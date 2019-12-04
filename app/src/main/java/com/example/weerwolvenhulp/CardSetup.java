@@ -18,7 +18,7 @@ public class CardSetup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_setup);
 
-        playerCount = getIntent().getIntExtra("playerCount", 4);
+        playerCount = getIntent().getIntExtra("playerCount", 8);
         Setup();
 
     }
@@ -185,6 +185,7 @@ public class CardSetup extends AppCompatActivity {
         b.setEnabled(enable);
 
     }
+
 
     public void UpdateSelectedCounter(){
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
 
-    Card card;
+    private Card card;
     boolean isMayor = false;
     public String name;
     boolean alive = true;
@@ -28,6 +28,23 @@ public class Player implements Serializable {
         }
 
         name = _name;
+    }
+
+    Card GetCard(){
+        return card;
+    }
+
+    Card.Role GetRole(){
+        return card.role;
+    }
+
+    void SetRole(Card.Role role, boolean changeFaction){
+        card.role = role;
+
+        if (changeFaction){
+            if (role == Card.Role.Werewolf) faction = Faction.Werewolf;
+            else faction = Faction.Citizens;
+        }
     }
 
     public void Reset(){

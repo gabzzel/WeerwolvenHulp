@@ -15,10 +15,7 @@ public class Card implements Serializable {
         CheatingGirl
     }
 
-    Role role = Role.Citizen;
-
-    Card(){
-    }
+    Role role;
 
     Card(Role _role){
         role = _role;

@@ -24,6 +24,7 @@ public class InGame extends AppCompatActivity {
     int dayCounter = 0;
     public boolean isDay = true;
     int playerCount = 0;
+    ArrayList<Card.Role> extraRoles = new ArrayList<>();
     ArrayList<Player> players = new ArrayList<>();
     ArrayList<Event> pastEvents = new ArrayList<>();
     LinkedList<Event> events = new LinkedList<>();
@@ -44,6 +45,7 @@ public class InGame extends AppCompatActivity {
 
         Intent intent = getIntent();
         players = (ArrayList<Player>)intent.getSerializableExtra("players");
+        extraRoles = (ArrayList<Card.Role>)intent.getSerializableExtra("extraRoles");
         playerCount = intent.getIntExtra("playerCount", 4);
         findViewById(R.id.name_select_scrollview).setVisibility(View.INVISIBLE);
 
@@ -70,7 +72,8 @@ public class InGame extends AppCompatActivity {
             return;
         }
         else if(shouldSelect){
-            ShowNameSelect();
+            if(currentEvent.type == Event.EventType.ThiefSwitch) ShowCardSelect();
+            else ShowNameSelect();
             return;
         }
 
@@ -131,7 +134,7 @@ public class InGame extends AppCompatActivity {
                     break;
 
                 case ThiefSwitch:
-                    // TODO Handle thief
+                    shouldSelect = true;
                     break;
 
                 case CupidAffect:
@@ -162,7 +165,8 @@ public class InGame extends AppCompatActivity {
             b.setText(getResources().getString(R.string.confirm));
         }
         else if(shouldSelect){
-            b.setText(getResources().getString(R.string.next_event_button_select_players_command));
+            if(currentEvent.type == Event.EventType.ThiefSwitch) b.setText(getResources().getString(R.string.select_role_to_switch_thief));
+            else b.setText(getResources().getString(R.string.next_event_button_select_players_command));
         }
         else if(e == null){
             if(isDay){
@@ -221,8 +225,8 @@ public class InGame extends AppCompatActivity {
 
                 // 3. Witch
                 if(GetPlayersByRole(Card.Role.Witch, true) != null){
-                    events.add(new Event(Event.EventType.WitchHeal));
-                    events.add(new Event(Event.EventType.WitchKill));
+                    if(WitchCanUsePotion(true)) events.add(new Event(Event.EventType.WitchHeal));
+                    if(WitchCanUsePotion(false)) events.add(new Event(Event.EventType.WitchKill));
                 }
             }
         }
@@ -237,7 +241,7 @@ public class InGame extends AppCompatActivity {
         if(shouldBeAlive) searchSpace = GetAlivePlayers();
 
         // Go through all players. If they have the role, add them to the list.
-        for(Player p : searchSpace){ if(p.card.role == role) ps.add(p); }
+        for(Player p : searchSpace){ if(p.GetRole() == role) ps.add(p); }
 
         if(ps.size() == 0) return null;
 
@@ -341,7 +345,7 @@ public class InGame extends AppCompatActivity {
     void WriteDeath(Player p){
         TextView text = new TextView(this);
         text.setGravity(Gravity.CENTER);
-        String s = p.name + " (" + getResources().getString(p.card.GetRoleStringID()) + ")";
+        String s = p.name + " (" + getResources().getString(p.GetCard().GetRoleStringID()) + ")";
         text.setText(s);
         text.setBackgroundColor(Color.RED);
         text.setTypeface(text.getTypeface(), Typeface.BOLD);
@@ -496,6 +500,65 @@ public class InGame extends AppCompatActivity {
         UpdateNextEventButton();
     }
 
+    void ShowCardSelect(){
+        LinearLayout ll = findViewById(R.id.card_select_container);
+        ll.setVisibility(View.VISIBLE);
+        for(int i = 1; i < ll.getChildCount(); i++){
+            Button b;
+            if(i == 2) b = findViewById(R.id.thief_choose_1);
+            else b = findViewById(R.id.thief_choose_2);
+            Card.Role role = extraRoles.get(i - 1);
+
+            switch (role){
+
+                case Werewolf:
+                    b.setBackgroundResource(R.drawable.werewolfcard200);
+                    break;
+                case Citizen:
+                    b.setBackgroundResource(R.drawable.citizencard200);
+                    break;
+                case Hunter:
+                    b.setBackgroundResource(R.drawable.huntercard200);
+                    break;
+                case Witch:
+                    b.setBackgroundResource(R.drawable.witchcard200);
+                    break;
+                case Cupid:
+                    b.setBackgroundResource(R.drawable.cupidcard200);
+                    break;
+                case Thief:
+                    b.setBackgroundResource(R.drawable.thiefcard200);
+                    break;
+                case Seer:
+                    b.setBackgroundResource(R.drawable.seercard200);
+                    break;
+                case CheatingGirl:
+                    b.setBackgroundResource(R.drawable.cheatinggirlcard200);
+                    break;
+            }
+        }
+
+        UpdateNextEventButton();
+    }
+
+    public void HandleCardSelect(View view){
+        int index;
+        // Om een of andere reden is dit omgedraaid?
+        if(view.getId() == R.id.thief_choose_1) index = 1;
+        else index = 0;
+
+        Card.Role newRole = extraRoles.get(index);
+        Player thief = GetPlayersByRole(Card.Role.Thief, true).get(0);
+        thief.SetRole(newRole, true);
+        //WriteEvent("De dief heeft nu de rol " + newRole.toString(), false);
+        LinearLayout ll = findViewById(R.id.card_select_container);
+        ll.setVisibility(View.INVISIBLE);
+        Button neb = findViewById(R.id.next_event_button);
+        neb.setEnabled(true);
+        shouldSelect = false;
+        UpdateNextEventButton();
+    }
+
     ArrayList<Player> GetRelevantPlayers(Event e){
         ArrayList<Player> ps = new ArrayList<>();
 
@@ -550,6 +613,10 @@ public class InGame extends AppCompatActivity {
 
         for(Player p : GetAlivePlayers()) KillPlayer(p);
 
+        // Remove death markers from the players
+        for(Player p : GetAlivePlayers()){
+            p.markOfDeath = false;
+        }
     }
 
     // Kill a player, but only if they are marked for death!
@@ -577,7 +644,7 @@ public class InGame extends AppCompatActivity {
         }
 
         // If the player is the hunter, add the relevant event to the queue
-        if(p.card.role == Card.Role.Hunter){
+        if(p.GetRole() == Card.Role.Hunter){
             events.add(0, new Event(Event.EventType.HunterKill));
         }
     }
@@ -628,5 +695,23 @@ public class InGame extends AppCompatActivity {
         }
 
         return done;
+    }
+
+    boolean WitchCanUsePotion(boolean healing){
+
+        if(pastEvents.size() == 0) return true;
+
+        else if(healing){
+            for(Event e : pastEvents){
+                if(e != null && e.type == Event.EventType.WitchHeal && e.affectedPlayers.size() > 0) return false;
+            }
+            return true;
+        }
+        else{
+            for(Event e : pastEvents){
+                if(e != null && e.type == Event.EventType.WitchKill && e.affectedPlayers.size() > 0) return false;
+            }
+            return true;
+        }
     }
 }

@@ -69,4 +69,7 @@
     <string name="select_player_fixed_number">Selecteer %1$d van de onderstaande speler(s) en bevestig m.b.v de knop onderaan.</string>
     <string name="nobody_to_select">Er zijn geen spelers die in aanmerking komen! Je zult moeten doen alsof er iets gebeurd...</string>
     <string name="placeholder_text">Dit is een placeholder.</string>
+    <string name="two_extra_from_thief">+2 door Dief</string>
+    <string name="in_game_card_choose_header">Welke van de volgende 2 rollen wil de dief aannemen?</string>
+    <string name="select_role_to_switch_thief">Selecteer een kaart...</string>
 </resources>
