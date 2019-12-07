@@ -8,6 +8,7 @@ public class Event {
         EndGame_WerewolfWin,
         EndGame_CitizenWin,
         EndGame_LoversWin,
+        EndGame_FlutePlayerWin,
         ElectMayor,
         Lynch,
         AnnounceDead,
@@ -17,14 +18,21 @@ public class Event {
         SeerLook,
         HunterKill,
         ThiefSwitch,
-        CupidAffect
+        CupidAffect,
+        FlutePlayerBewitch,
+        AwakeBewitched
     }
 
-    EventType type = null;
-
+    EventType type;
+    private int dayPart;
     ArrayList<Player> affectedPlayers = new ArrayList<>();
 
-    Event(EventType _type){
+    Event(EventType _type, int _dayPart){
         type = _type;
+        dayPart = _dayPart;
+    }
+
+    int getDayPart(){
+        return dayPart;
     }
 }

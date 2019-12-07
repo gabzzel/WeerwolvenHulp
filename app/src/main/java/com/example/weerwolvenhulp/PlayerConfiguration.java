@@ -73,6 +73,9 @@ public class PlayerConfiguration extends AppCompatActivity {
             case Citizen:
                 i.setImageDrawable(getResources().getDrawable(R.drawable.citizencard200));
                 break;
+            case FlutePlayer:
+                i.setImageDrawable(getResources().getDrawable(R.drawable.fluteplayercard200));
+                break;
             case Hunter:
                 i.setImageDrawable(getResources().getDrawable(R.drawable.huntercard200));
                 break;
@@ -85,11 +88,23 @@ public class PlayerConfiguration extends AppCompatActivity {
             case Thief:
                 i.setImageDrawable(getResources().getDrawable(R.drawable.thiefcard200));
                 break;
+            case Savior:
+                i.setImageDrawable(getResources().getDrawable(R.drawable.saviorcard200));
+                break;
+            case Scapegoat:
+                i.setImageDrawable(getResources().getDrawable(R.drawable.scapegoatcard200));
+                break;
             case Seer:
                 i.setImageDrawable(getResources().getDrawable(R.drawable.seercard200));
                 break;
             case CheatingGirl:
                 i.setImageDrawable(getResources().getDrawable(R.drawable.cheatinggirlcard200));
+                break;
+            case VillageElder:
+                i.setImageDrawable(getResources().getDrawable(R.drawable.villageeldercard200));
+                break;
+            case VillageIdiot:
+                i.setImageDrawable(getResources().getDrawable(R.drawable.villageidiotcard200));
                 break;
         }
 

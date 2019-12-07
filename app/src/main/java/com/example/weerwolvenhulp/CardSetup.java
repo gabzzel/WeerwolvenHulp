@@ -90,6 +90,26 @@ public class CardSetup extends AppCompatActivity {
             case R.id.pick_cupid_button:
                 ToggleSingleCard(Card.Role.Cupid);
                 break;
+
+            case R.id.pick_flute_player_button:
+                ToggleSingleCard(Card.Role.FlutePlayer);
+                break;
+
+            case R.id.pick_savior_button:
+                ToggleSingleCard(Card.Role.Savior);
+                break;
+
+            case R.id.pick_scapegoat_button:
+                ToggleSingleCard(Card.Role.Scapegoat);
+                break;
+
+            case R.id.pick_village_elder_button:
+                ToggleSingleCard(Card.Role.VillageElder);
+                break;
+
+            case R.id.pick_village_idiot_button:
+                ToggleSingleCard(Card.Role.VillageIdiot);
+                break;
         }
 
         UpdateSelectedCounter();
@@ -185,7 +205,6 @@ public class CardSetup extends AppCompatActivity {
         b.setEnabled(enable);
 
     }
-
 
     public void UpdateSelectedCounter(){
 

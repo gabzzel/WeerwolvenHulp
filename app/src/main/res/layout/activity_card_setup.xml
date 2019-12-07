@@ -10,7 +10,7 @@
     <ScrollView
         android:id="@+id/cards_scroll_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/start_game_button"
@@ -19,13 +19,13 @@
         app:layout_constraintTop_toBottomOf="@+id/selected_counter_text">
 
         <TableLayout
-            android:id="@+id/table_of_cards"
+            android:id="@+id/table_of_cards_base_game"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
 
             <TableRow
-                android:id="@+id/row_1"
+                android:id="@+id/row_1_base_game"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="0dp"
@@ -90,7 +90,7 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/row_2"
+                android:id="@+id/row_2_base_game"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center">
@@ -142,7 +142,7 @@
             </TableRow>
 
             <TableRow
-                android:id="@+id/row_3"
+                android:id="@+id/row_3_base_game"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center">
@@ -186,11 +186,114 @@
                     android:layout_margin="10dp"
                     android:layout_weight="1"
                     android:alpha="0.5"
-                    android:background="#505050"
                     android:maxWidth="100dp"
                     android:minWidth="100dp"
+                    android:minHeight="100dp" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/border_new_moon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#D0FFFFFF"
+                android:minHeight="3dp" />
+
+            <TableRow
+                android:id="@+id/row_1_new_moon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/pick_village_idiot_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/villageidiotcard100"
+                    android:gravity="center"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:minWidth="100dp"
                     android:minHeight="100dp"
-                    android:textColor="#D0FFFFFF" />
+                    android:onClick="AddSingleCard" />
+
+                <Button
+                    android:id="@+id/pick_village_elder_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/villageeldercard100"
+                    android:gravity="center"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:onClick="AddSingleCard" />
+
+                <Button
+                    android:id="@+id/pick_scapegoat_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/scapegoatcard100"
+                    android:gravity="center"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:onClick="AddSingleCard" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/row_2_new_moon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <Button
+                    android:id="@+id/pick_flute_player_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/fluteplayercard100"
+                    android:gravity="center"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:onClick="AddSingleCard" />
+
+                <Button
+                    android:id="@+id/pick_savior_button"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:background="@drawable/saviorcard100"
+                    android:gravity="center"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:onClick="AddSingleCard" />
+
+                <Button
+                    android:id="@+id/placeholder_new_moon"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:alpha="0.5"
+                    android:gravity="center"
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp" />
             </TableRow>
 
         </TableLayout>

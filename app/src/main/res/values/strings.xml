@@ -32,7 +32,8 @@
     <string name="elect_mayor_event_description">Roep een stemming uit voor een nieuwe burgemeester.</string>
     <string name="start_next_DoN_event_description">Start de volgende %1$s.</string>
     <string name="lynch_event_description">Roep een stemming op voor de volgende lynching / brandstapel.</string>
-    <string name="announce_dead_event_description">Er zijn deze nacht %1$d slachtoffers gevallen!</string>
+    <string name="announce_dead_event_description_single">Er is deze nacht 1 slachtoffer gevallen!</string>
+    <string name="announce_dead_event_description_plural">Er zijn deze nacht %1$d slachtoffers gevallen!</string>
     <string name="next_event">Volgende gebeurtenis.</string>
     <string name="day">dag</string>
     <string name="night">nacht</string>
@@ -62,6 +63,7 @@
     <string name="end_game_werewolf_win">Spel voorbij! De weerwolven hebben gewonnnen!</string>
     <string name="end_game_citizen_win">Spel voorbij! De burgers hebben gewonnen!</string>
     <string name="end_game_lovers_win">Spel voorbij! De liefde heeft overwonnen!</string>
+    <string name="end_game_fluteplayer_win">Spel voorbij! De fluitspeler heeft gewonnen!</string>
     <string name="next_event_button_select_players_command">Selecteer spelers...</string>
     <string name="confirm">Bevestigen</string>
     <string name="select_single_player">Selecteer één van de onderstaande spelers en bevestig m.b.v knop onderaan.</string>
@@ -72,4 +74,12 @@
     <string name="two_extra_from_thief">+2 door Dief</string>
     <string name="in_game_card_choose_header">Welke van de volgende 2 rollen wil de dief aannemen?</string>
     <string name="select_role_to_switch_thief">Selecteer een kaart...</string>
+    <string name="village_idiot_name">Dorpsgek</string>
+    <string name="flute_player_name">Fluitspeler</string>
+    <string name="savior_name">Genezer</string>
+    <string name="village_elder_name">Dorpsoudste</string>
+    <string name="scapegoat_name">Zondebok</string>
+    <string name="name_select_header_flute_player_bewitch">Wie worden er deze nacht betoverd?</string>
+    <string name="flute_player_bewitch_event_description">De fluitspeler kiest nieuwe betoverden</string>
+    <string name="awake_bewitched_event_description">De betoverden worden wakker.</string>
 </resources>

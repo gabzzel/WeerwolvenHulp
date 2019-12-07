@@ -1,6 +1,7 @@
 package com.example.weerwolvenhulp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.math.MathUtils;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,7 +22,7 @@ import java.util.LinkedList;
 public class InGame extends AppCompatActivity {
 
     LinearLayout container = null;
-    int dayCounter = 0;
+    int dayPartCounter = 0; // Nights are uneven, days are even.
     public boolean isDay = true;
     int playerCount = 0;
     ArrayList<Card.Role> extraRoles = new ArrayList<>();
@@ -36,6 +37,8 @@ public class InGame extends AppCompatActivity {
     boolean shouldSelect = false;
     int minPlayersToSelect = 0;
     int maxPlayersToSelect = 1;
+
+    boolean villageElderLives = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +55,34 @@ public class InGame extends AppCompatActivity {
         HandleNextEvent(null);
     }
 
+    /**
+     * Start a new day.
+     */
     void StartNewDay(){
-        dayCounter++;
+        dayPartCounter++;
+        for(Player p : GetAlivePlayers()) p.daysSurvived++;
         isDay = true;
         AddBorder();
         FillEventQueue();
+        WriteEvent(null);
     }
 
+    /**
+     * Start a new night.
+     */
     void StartNewNight(){
+        dayPartCounter++;
         isDay = false;
+        for(Player p : GetAlivePlayers()) p.nightsSurvived++;
         AddBorder();
         FillEventQueue();
+        WriteEvent(null);
     }
 
+    /**
+     * Handle the next event.
+     * @param view The Button that called this Event.
+     */
     public void HandleNextEvent(View view){
 
         if(selecting){
@@ -88,9 +106,16 @@ public class InGame extends AppCompatActivity {
 
         else{
 
+            // Write the event.
+            WriteEvent(currentEvent);
+
             // The rest of the events should be handled here!
             switch (currentEvent.type){
 
+                case EndGame_WerewolfWin:
+                case EndGame_CitizenWin:
+                case EndGame_LoversWin:
+                    break;
                 case ElectMayor:
                     selectNameHeaderText = getResources().getString(R.string.name_select_header_elect_mayor);
                     PrepareNameSelect(1, 1);
@@ -102,7 +127,7 @@ public class InGame extends AppCompatActivity {
                     break;
 
                 case AnnounceDead:
-                    KillMarkedPlayers();
+                    AnnounceDead();
                     break;
 
                 case WerewolfKill:
@@ -141,16 +166,25 @@ public class InGame extends AppCompatActivity {
                     selectNameHeaderText = getResources().getString(R.string.name_select_header_cupid_affect);
                     PrepareNameSelect(2, 2);
                     break;
+
+                case FlutePlayerBewitch:
+                    selectNameHeaderText = getResources().getString(R.string.flute_player_bewitch_event_description);
+                    PrepareNameSelect(2, 2);
+                    break;
+
+                case AwakeBewitched:
+                    break;
             }
         }
 
-        // Write the event.
-        WriteEvent(currentEvent);
         pastEvents.add(currentEvent);
 
         UpdateNextEventButton();
     }
 
+    /**
+     * Update the Next Event Button to show the correct string.
+     */
     void UpdateNextEventButton(){
 
         Event e = events.peek();
@@ -181,35 +215,37 @@ public class InGame extends AppCompatActivity {
         }
     }
 
-    // Fill the queue with events during the Day or Night.
+    /**
+     * Fill the event Queue, based on day/night, alive characters and past and current events
+     */
     void FillEventQueue(){
         if(isDay){
 
-            if(dayCounter <= 1) events.add(new Event(Event.EventType.ElectMayor));
+            if(dayPartCounter == 2) events.add(new Event(Event.EventType.ElectMayor, dayPartCounter));
 
             else{
                 // 1. Announce the dead
-                events.add(new Event(Event.EventType.AnnounceDead));
+                events.add(new Event(Event.EventType.AnnounceDead, dayPartCounter));
 
                 // 2. Elect mayor (if there is none)
-                if(!CheckForMayor()) events.add(new Event(Event.EventType.ElectMayor));
+                if(GetMayor() == null) events.add(new Event(Event.EventType.ElectMayor, dayPartCounter));
 
                 // 3. Lynch
-                events.add(new Event(Event.EventType.Lynch));
+                events.add(new Event(Event.EventType.Lynch, dayPartCounter));
             }
         }
         else{
             // The first night
-            if(dayCounter == 0){
+            if(dayPartCounter == 1){
 
                 // 1. Thief
                 if(GetPlayersByRole(Card.Role.Thief, true) != null){
-                    events.add(new Event(Event.EventType.ThiefSwitch));
+                    events.add(new Event(Event.EventType.ThiefSwitch, dayPartCounter));
                 }
 
                 // 2. Cupid
                 if(GetPlayersByRole(Card.Role.Cupid, true) != null){
-                    events.add(new Event(Event.EventType.CupidAffect));
+                    events.add(new Event(Event.EventType.CupidAffect, dayPartCounter));
                 }
 
             }
@@ -217,41 +253,25 @@ public class InGame extends AppCompatActivity {
 
                 // 1. Seer
                 if(GetPlayersByRole(Card.Role.Seer, true) != null){
-                    events.add(new Event(Event.EventType.SeerLook));
+                    events.add(new Event(Event.EventType.SeerLook, dayPartCounter));
                 }
 
                 // 2. Werewolves
-                events.add(new Event(Event.EventType.WerewolfKill));
+                events.add(new Event(Event.EventType.WerewolfKill, dayPartCounter));
 
                 // 3. Witch
                 if(GetPlayersByRole(Card.Role.Witch, true) != null){
-                    if(WitchCanUsePotion(true)) events.add(new Event(Event.EventType.WitchHeal));
-                    if(WitchCanUsePotion(false)) events.add(new Event(Event.EventType.WitchKill));
+                    if(WitchCanUsePotion(true)) events.add(new Event(Event.EventType.WitchHeal, dayPartCounter));
+                    if(WitchCanUsePotion(false)) events.add(new Event(Event.EventType.WitchKill, dayPartCounter));
+                }
+
+                // 4. Flute Player
+                if(GetPlayersByRole(Card.Role.FlutePlayer, true) != null){
+                    events.add(new Event(Event.EventType.FlutePlayerBewitch, dayPartCounter));
+                    events.add(new Event(Event.EventType.AwakeBewitched, dayPartCounter));
                 }
             }
         }
-    }
-
-    // Get the list of players, given a role
-    ArrayList<Player> GetPlayersByRole(Card.Role role, boolean shouldBeAlive){
-
-        ArrayList<Player> ps = new ArrayList<>();
-        ArrayList<Player> searchSpace = players;
-
-        if(shouldBeAlive) searchSpace = GetAlivePlayers();
-
-        // Go through all players. If they have the role, add them to the list.
-        for(Player p : searchSpace){ if(p.GetRole() == role) ps.add(p); }
-
-        if(ps.size() == 0) return null;
-
-        return ps;
-    }
-
-    // Return if there is a mayor
-    boolean CheckForMayor(){
-        for(Player p : players){ if(p.isMayor) return true; }
-        return false;
     }
 
     void WriteEvent(Event event){
@@ -261,9 +281,9 @@ public class InGame extends AppCompatActivity {
 
         if(event == null){
             isHeader = true;
-            if(isDay) string = getResources().getString(R.string.day_started_event, dayCounter);
-            else if(dayCounter == 0) string = getResources().getString(R.string.first_night_started);
-            else string = getResources().getString(R.string.night_started_event, dayCounter);
+            if(isDay) string = getResources().getString(R.string.day_started_event, (int)(dayPartCounter/2));
+            else if(dayPartCounter == 1) string = getResources().getString(R.string.first_night_started);
+            else string = getResources().getString(R.string.night_started_event, (int)((dayPartCounter + 1) / 2));
         }
         else{
             switch (event.type){
@@ -277,6 +297,9 @@ public class InGame extends AppCompatActivity {
                 case EndGame_WerewolfWin:
                     string = getResources().getString(R.string.end_game_werewolf_win);
                     break;
+                case EndGame_FlutePlayerWin:
+                    string = getString(R.string.end_game_fluteplayer_win);
+                    break;
                 case ElectMayor:
                     string = getResources().getString(R.string.elect_mayor_event_description);
                     break;
@@ -284,8 +307,10 @@ public class InGame extends AppCompatActivity {
                     string = getResources().getString(R.string.lynch_event_description);
                     break;
                 case AnnounceDead:
-                    // Hoeft niet aangeroepen te worden, want dat wordt al gedaan tijdens het handlen.
-                    //string = getResources().getString(R.string.announce_dead_event_description);
+                    ArrayList<Player> victims = GetPlayersKilledInNight(dayPartCounter - 1);
+                    if(victims == null || victims.size() == 0) string = getString(R.string.no_dead_tonight);
+                    else if(victims.size() == 1) getString(R.string.announce_dead_event_description_single);
+                    else string = getResources().getString(R.string.announce_dead_event_description_plural, victims.size());
                     break;
                 case WerewolfKill:
                     if(GetPlayersByRole(Card.Role.Werewolf, true).size() == 1){
@@ -310,6 +335,12 @@ public class InGame extends AppCompatActivity {
                     break;
                 case CupidAffect:
                     string = getResources().getString(R.string.cupid_affect_event_description);
+                    break;
+                case FlutePlayerBewitch:
+                    string = getString(R.string.flute_player_bewitch_event_description);
+                    break;
+                case AwakeBewitched:
+                    string = getString(R.string.awake_bewitched_event_description);
                     break;
             }
         }
@@ -345,7 +376,7 @@ public class InGame extends AppCompatActivity {
     void WriteDeath(Player p){
         TextView text = new TextView(this);
         text.setGravity(Gravity.CENTER);
-        String s = p.name + " (" + getResources().getString(p.GetCard().GetRoleStringID()) + ")";
+        String s = p.name + " (" + getResources().getString(p.getCard().GetRoleStringID()) + ")";
         text.setText(s);
         text.setBackgroundColor(Color.RED);
         text.setTypeface(text.getTypeface(), Typeface.BOLD);
@@ -379,23 +410,34 @@ public class InGame extends AppCompatActivity {
                 selectedPlayers.get(0).isMayor = true;
                 break;
             case Lynch:
-                KillPlayerImmediate(selectedPlayers.get(0));
+                KillPlayer(selectedPlayers.get(0), Player.DeathCause.Lynch);
                 break;
             case WerewolfKill:
-                if(selectedPlayers.size() == 1) selectedPlayers.get(0).markOfDeath = true;
+                if(selectedPlayers.size() == 1){
+                    KillPlayer(selectedPlayers.get(0), Player.DeathCause.Werewolf);
+                    WriteEvent("De weerwolf heeft " + selectedPlayers.get(0).name + " vermoord.", false);
+                }
+
                 break;
             case WitchHeal:
-                if(selectedPlayers.size() == 1) selectedPlayers.get(0).markOfDeath = false;
+                if(selectedPlayers.size() == 1){
+                    selectedPlayers.get(0).Heal();
+                    WriteEvent("De heks heeft " + selectedPlayers.get(0).name + " levend gemaakt.", false);
+                }
                 break;
             case WitchKill:
-                if(selectedPlayers.size() == 1) selectedPlayers.get(0).markOfDeath = true;
+                if(selectedPlayers.size() == 1) selectedPlayers.get(0).Kill(Player.DeathCause.Witch);
                 break;
             case HunterKill:
-                KillPlayerImmediate(selectedPlayers.get(0));
+                KillPlayer(selectedPlayers.get(0), Player.DeathCause.Hunter);
                 break;
             case CupidAffect:
                 selectedPlayers.get(0).faction = Player.Faction.Lovers;
                 selectedPlayers.get(1).faction = Player.Faction.Lovers;
+                break;
+            case FlutePlayerBewitch:
+                selectedPlayers.get(0).bewitched = true;
+                selectedPlayers.get(1).bewitched = true;
                 break;
         }
 
@@ -404,17 +446,25 @@ public class InGame extends AppCompatActivity {
     }
 
     public void SelectName(View view){
-        Button b = (Button)view;
-        String name = b.getText().toString();
-        Player p = GetPlayerByName(name);
+        Button b = (Button)view; // The button with the name that we clicked on
+        String name = b.getText().toString(); // The name in that button
+        Player p = GetPlayerByName(name); // Get the player with that name
         LinearLayout ll = findViewById(R.id.name_select_container);
 
+        ArrayList<Player> causingPlayers = GetCausingPlayers(currentEvent);
+
         if(currentEvent.affectedPlayers.contains(p)){
-            b.setBackgroundColor(Color.LTGRAY);
+
+            if(causingPlayers != null && causingPlayers.contains(p)){
+                b.setBackgroundColor(Color.DKGRAY);
+            }
+            else b.setBackgroundColor(Color.GRAY);
+            b.setTextColor(0xD0FFFFFF);
             currentEvent.affectedPlayers.remove(p);
         }
         else if(currentEvent.affectedPlayers.size() < maxPlayersToSelect){
             b.setBackgroundColor(Color.GREEN);
+            b.setTextColor(0xFF2B2B2B);
             currentEvent.affectedPlayers.add(p);
         }
         // If we have already selected a player, but want to switch by selecting another...
@@ -424,7 +474,8 @@ public class InGame extends AppCompatActivity {
 
             for(int i = ll.getChildCount() - 1; i > 1; i--){
                 View toClear = ll.getChildAt(i);
-                toClear.setBackgroundColor(Color.LTGRAY);
+                toClear.setBackgroundColor(Color.GRAY);
+                ((Button)toClear).setTextColor(0xD0FFFFFF);
             }
 
             b.setBackgroundColor(Color.GREEN);
@@ -433,11 +484,11 @@ public class InGame extends AppCompatActivity {
         UpdateNextEventButton();
     }
 
-    Player GetPlayerByName(String name){
-        for(Player p : players) if (p.name.equals(name)) return p;
-        return null;
-    }
-
+    /**
+     * Prepare the environment for a name selection.
+     * @param min The minimum number of players that should be selected
+     * @param max The maximum number of players that should be selected
+     */
     void PrepareNameSelect(int min, int max){
         shouldSelect = true;
         minPlayersToSelect = min;
@@ -474,13 +525,27 @@ public class InGame extends AppCompatActivity {
             ll.removeViewAt(i);
         }
 
+        // Get all relevant players for this event
         ArrayList<Player> relevantPlayers = GetRelevantPlayers(currentEvent);
+
+        // Get the causing player(s)
+        ArrayList<Player> causingPlayers = GetCausingPlayers(currentEvent);
+
+        // Create a new button for every player
         for(int i = 0; i < relevantPlayers.size(); i++){
             Player p = relevantPlayers.get(i);
             Button b = new Button(this);
             b.setText(p.name);
             b.setTextSize(14);
-            b.setBackgroundColor(Color.LTGRAY);
+            b.setBackgroundColor(Color.GRAY);
+            b.setTextColor(0xD0FFFFFF);
+
+            // Set the text bold and italic for players that caused this event.
+            if(causingPlayers != null && causingPlayers.contains(p)){
+                b.setTypeface(b.getTypeface(), Typeface.BOLD_ITALIC);
+                b.setBackgroundColor(Color.DKGRAY);
+            }
+
             ll.addView(b);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -494,6 +559,7 @@ public class InGame extends AppCompatActivity {
             TextView nobody = new TextView(this);
             nobody.setText(getResources().getString(R.string.nobody_to_select));
             nobody.setTextSize(20);
+            nobody.setTextColor(0xD0FFFFFF);
             ll.addView(nobody);
         }
 
@@ -549,7 +615,7 @@ public class InGame extends AppCompatActivity {
 
         Card.Role newRole = extraRoles.get(index);
         Player thief = GetPlayersByRole(Card.Role.Thief, true).get(0);
-        thief.SetRole(newRole, true);
+        thief.setRole(newRole, true);
         //WriteEvent("De dief heeft nu de rol " + newRole.toString(), false);
         LinearLayout ll = findViewById(R.id.card_select_container);
         ll.setVisibility(View.INVISIBLE);
@@ -559,34 +625,78 @@ public class InGame extends AppCompatActivity {
         UpdateNextEventButton();
     }
 
+    // --------- Getting Players --------- //
+
+    /**
+     * @param role = The role of the players to return
+     * @param shouldBeAlive = If the returned array should only contain alive players
+     * @return A ArrayList of all players matching the specified role. Null if none found.
+     */
+    ArrayList<Player> GetPlayersByRole(Card.Role role, boolean shouldBeAlive){
+
+        ArrayList<Player> ps = new ArrayList<>();
+        ArrayList<Player> searchSpace = players;
+
+        if(shouldBeAlive) searchSpace = GetAlivePlayers();
+
+        // Go through all players. If they have the role, add them to the list.
+        for(Player p : searchSpace){ if(p.getRole() == role) ps.add(p); }
+
+        if(ps.size() == 0) return null;
+
+        return ps;
+    }
+
+    /**
+     * @param faction The Faction of the players to return
+     * @param shouldBeAlive If the players returned should all be alive
+     * @return An ArrayList with the players in the specified faction, or null when there are none.
+     */
+    ArrayList<Player> GetPlayersByFaction(Player.Faction faction, boolean shouldBeAlive){
+
+        // Create a new arraylist, which is going to be our return
+        ArrayList<Player> ps = new ArrayList<>();
+
+        // Set our search space as wide as possible, which is all players.
+        ArrayList<Player> searchSpace = players;
+
+        // If we should only return alive players, limit our search space to alive players.
+        if(shouldBeAlive) searchSpace = GetAlivePlayers();
+
+        for(Player p : searchSpace) if(p.faction == faction) ps.add(p);
+
+        // Return null if we found nothing, return the ArrayList with relevant players
+        if(ps.size() == 0) return null;
+        return ps;
+    }
+
     ArrayList<Player> GetRelevantPlayers(Event e){
         ArrayList<Player> ps = new ArrayList<>();
 
         switch (e.type){
 
             case ElectMayor:
-                ps = GetAlivePlayers();
-                break;
             case Lynch:
                 ps = GetAlivePlayers();
+
+                // Get the village idiot if revealed...
+                Player villageIdiot = VillageIdiotRevealed();
+
+                // If the village idiot is revealed, he/she cannot be selected for mayor or be lynched
+                if(villageIdiot != null) ps.remove(villageIdiot);
+
                 break;
-            case WerewolfKill:
-                ps = GetAlivePlayers();
-                break;
+
             case WitchHeal:
                 Player p = GetWerewolfVictim();
                 if(p != null) ps.add(p);
                 break;
-            case WitchKill:
-                ps = GetAlivePlayers();
+
+            case FlutePlayerBewitch:
+                ps = GetBewitchedPlayers(false, true);
                 break;
-            case SeerLook:
-                ps = GetAlivePlayers();
-                break;
-            case HunterKill:
-                ps = GetAlivePlayers();
-                break;
-            case CupidAffect:
+
+            default:
                 ps = GetAlivePlayers();
                 break;
         }
@@ -597,63 +707,88 @@ public class InGame extends AppCompatActivity {
     ArrayList<Player> GetAlivePlayers(){
         ArrayList<Player> ps = new ArrayList<>();
         for(Player p : players){
-            if(p.alive) ps.add(p);
+            if(p.IsAlive()) ps.add(p);
         }
         return ps;
     }
 
-    Player GetWerewolfVictim(){
-        for(Player p : players){
-            if(p.markOfDeath) return p;
+    ArrayList<Player> GetCausingPlayers(Event e){
+
+        switch (e.type){
+            case EndGame_WerewolfWin:
+                return GetPlayersByFaction(Player.Faction.Werewolf, false);
+            case EndGame_CitizenWin:
+                return GetPlayersByFaction(Player.Faction.Citizens, false);
+            case EndGame_LoversWin:
+                return GetPlayersByFaction(Player.Faction.Lovers, false);
+            case WerewolfKill:
+                return GetPlayersByRole(Card.Role.Werewolf, true);
+            case WitchHeal:
+            case WitchKill:
+                return GetPlayersByRole(Card.Role.Witch, true);
+            case SeerLook:
+                return GetPlayersByRole(Card.Role.Seer, true);
+            case HunterKill:
+                return GetPlayersByRole(Card.Role.Hunter, true);
+            case CupidAffect:
+                return GetPlayersByRole(Card.Role.Cupid, true);
         }
+
         return null;
     }
 
-    void KillMarkedPlayers(){
+    ArrayList<Player> GetPlayersKilledInNight(int nightNumber){
+        ArrayList<Player> ps = new ArrayList<>();
 
-        for(Player p : GetAlivePlayers()) KillPlayer(p);
-
-        // Remove death markers from the players
-        for(Player p : GetAlivePlayers()){
-            p.markOfDeath = false;
-        }
-    }
-
-    // Kill a player, but only if they are marked for death!
-    boolean KillPlayer(Player p){
-
-        if(!p.markOfDeath) return false;
-
-        KillPlayerImmediate(p);
-        return true;
-
-    }
-
-    // Kill a player, regardless of their marks. This function also plays out the consequence (like lovers)
-    void KillPlayerImmediate(Player p){
-        p.alive = false;
-        p.markOfDeath = true;
-
-        WriteDeath(p);
-        if(EndGameIfPossible()) return;
-
-        // If the player is one of the lovers, kill the other lover.
-        if(p.faction == Player.Faction.Lovers){
-            Player otherLover = GetOtherLover(p);
-            KillPlayerWithoutConsequence(otherLover);
+        for(Player p : players){
+            if(p.nightsSurvived == nightNumber && p.IsDead()) ps.add(p);
         }
 
-        // If the player is the hunter, add the relevant event to the queue
-        if(p.GetRole() == Card.Role.Hunter){
-            events.add(0, new Event(Event.EventType.HunterKill));
-        }
+        if(ps.size() == 0) return null;
+
+        return ps;
     }
 
-    // Kill a player, regardless of everything and without doing anything. Used for example when dying of lovers' sorrow.
-    void KillPlayerWithoutConsequence(Player p){
-        p.alive = false;
-        WriteDeath(p);
-        EndGameIfPossible();
+    ArrayList<Player> GetBewitchedPlayers(boolean bewitched, boolean shouldBeAlive){
+        ArrayList<Player> searchSpace = players;
+        if(shouldBeAlive) searchSpace = GetAlivePlayers();
+
+        ArrayList<Player> ps = new ArrayList<>();
+        for(Player p : searchSpace){
+            if(p.bewitched == bewitched) ps.add(p);
+        }
+
+        return ps;
+    }
+
+    Player GetPlayerByName(String name){
+        for(Player p : players) if (p.name.equals(name)) return p;
+        return null;
+    }
+
+    Player GetWerewolfVictim(){
+
+        Player victim = null;
+
+        if(pastEvents != null && pastEvents.size() > 0){
+            for(Event e : pastEvents){
+                if(e != null && e.type == Event.EventType.WerewolfKill && e.getDayPart() == dayPartCounter - 1 && e.affectedPlayers.size() > 0){
+                    victim = e.affectedPlayers.get(0);
+                }
+            }
+        }
+
+        return victim;
+
+    }
+
+    Player GetMayor(){
+        for(Player p : GetAlivePlayers()) {
+            if (p.isMayor) {
+                return p;
+            }
+        }
+        return null;
     }
 
     Player GetOtherLover(Player other){
@@ -667,6 +802,66 @@ public class InGame extends AppCompatActivity {
         return null;
     }
 
+    Player VillageIdiotRevealed(){
+
+        if(pastEvents == null || pastEvents.size() == 0) return null;
+
+        // Go through all events...
+        for(Event e : pastEvents){
+            // If we found a lynching and there are affected players...
+            if(e != null && e.type == Event.EventType.Lynch && e.affectedPlayers != null && e.affectedPlayers.size() > 0){
+                // Go through all the affected players
+                for(Player p : e.affectedPlayers){
+                    if(p.getRole() == Card.Role.VillageIdiot) return p;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // --------- Killing players and ending the game --------- //
+
+    void AnnounceDead(){
+
+        // Get all players killed the night before
+        ArrayList<Player> victims = GetPlayersKilledInNight(dayPartCounter - 1);
+
+        if(victims != null && victims.size() > 1){
+            for(Player p : victims) WriteDeath(p);
+        }
+
+        EndGameIfPossible();
+    }
+
+    void KillPlayer(Player p, Player.DeathCause cause){
+
+        // If the player is not alive, we are literally pulling a dead horse here
+        if(p.IsDead()) return;
+
+        // Try to kill the player. If we succeed, continue. Else, do nothing
+        if(!p.Kill(cause)) return;
+
+        // We killed a player succesfully!
+        // If it is day, we need to write the death immediately
+        if(isDay) WriteDeath(p);
+
+        if(EndGameIfPossible()) return;
+
+        // If we are one of the lovers, kill the other lover as well
+        if(p.faction == Player.Faction.Lovers){
+            Player otherLover = GetOtherLover(p);
+            KillPlayer(otherLover, Player.DeathCause.LoversSorrow);
+        }
+
+        // If we are killed and are Hunter, we may kill someone if we are not killed by Lovers Sorrow
+        if(p.getRole() == Card.Role.Hunter && cause != Player.DeathCause.LoversSorrow) {
+            // If it's day, the hunter can kill someone immediately
+            if (isDay) events.add(0, new Event(Event.EventType.HunterKill, dayPartCounter));
+            else events.add(new Event(Event.EventType.HunterKill, dayPartCounter));
+        }
+    }
+
     boolean EndGameIfPossible(){
 
         ArrayList<Player> werewolves = GetPlayersByRole(Card.Role.Werewolf, true);
@@ -675,19 +870,33 @@ public class InGame extends AppCompatActivity {
 
         // If there are no more werewolves, we are done.
         if(werewolves == null || werewolves.isEmpty()){
-            WriteEvent(new Event(Event.EventType.EndGame_CitizenWin));
+            WriteEvent(new Event(Event.EventType.EndGame_CitizenWin, dayPartCounter));
             done = true;
         }
         // If there are only werewolves, we are done.
         else if(alivePlayers.size() == werewolves.size()){
-            WriteEvent(new Event(Event.EventType.EndGame_WerewolfWin));
+            WriteEvent(new Event(Event.EventType.EndGame_WerewolfWin, dayPartCounter));
             done = true;
         }
         // If there are only 2 players left and they are the lovers, they win!
         else if(alivePlayers.size() == 2 && alivePlayers.get(0).faction == Player.Faction.Lovers && alivePlayers.get(1).faction == Player.Faction.Lovers){
-            WriteEvent(new Event(Event.EventType.EndGame_LoversWin));
+            WriteEvent(new Event(Event.EventType.EndGame_LoversWin, dayPartCounter));
             done = true;
         }
+        // If everyone except the fluteplayer is bewitched and the fluteplayer is alive, he wins!
+        else if(GetPlayersByRole(Card.Role.FlutePlayer, true) != null){
+            boolean all = true;
+            for(Player p : alivePlayers){
+                if(!p.bewitched){
+                    all = false;
+                }
+            }
+            if(all){
+                WriteEvent(new Event(Event.EventType.EndGame_FlutePlayerWin, dayPartCounter));
+                done = true;
+            }
+        }
+
 
         if(done){
             events.clear();
